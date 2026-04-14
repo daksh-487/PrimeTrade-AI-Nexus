@@ -17,6 +17,16 @@ A professional, CLI-based Python trading bot that places structured orders on th
 
 ---
 
+## UI Overhaul Preview
+
+### Dashboard Overview
+![Dashboard](assets/dashboard.png)
+
+### Conversational AI Integration
+![AI Interaction](assets/ai_interaction.png)
+
+---
+
 ## Setup Instructions
 
 1. **Clone Repo / Navigate to Directory:**
