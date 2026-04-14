@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrimeTrade Bot - Groww Aesthetic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Groww Brand Colors */
+            --primary-teal: #00d09c;
+            --primary-teal-hover: #00b386;
+            --bg-page: #f6f8f9;
+            --bg-card: #ffffff;
+            --text-main: #44475b;
+            --text-heading: #1c1e27;
+            --text-muted: #7c7e8c;
+            --border-color: #ecedf0;
+            --color-up: #00d09c;
+            --color-down: #eb5b3c;
+            --chat-bg: #ffffff;
+            --chat-user: #f2f4f7;
+            --chat-ai: #e6faf5;
+            
+            --font-main: 'Roboto', sans-serif;
+            --shadow-subtle: 0 4px 12px rgba(0, 0, 0, 0.04);
+            --shadow-float: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            font-size: 14px;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        /* Top Navigation */
+        .navbar {
+            background-color: #ffffff;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-heading);
+            letter-spacing: -0.5px;
+        }
+        
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background-color: var(--primary-teal);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .search-bar {
+            background-color: var(--bg-page);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 16px;
+            width: 400px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Clean Ticker */
+        .marquee-wrapper {
+            background-color: #ffffff;
+            border-bottom: 1px solid var(--border-color);
+            overflow: hidden;
+            padding: 12px 0;
+        }
+
+        .marquee-content {
+            display: inline-block;
+            white-space: nowrap;
+            animation: scroll 40s linear infinite;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .ticker-item {
+            display: inline-flex;
+            gap: 8px;
+            font-weight: 500;
+            padding: 0 32px;
+            border-right: 1px solid var(--border-color);
+            color: var(--text-heading);
+        }
+
+        .val-up { color: var(--color-up); }
+        .val-down { color: var(--color-down); }
+
+        /* Main Layout Grid */
+        .container {
+            max-width: 1200px;
+            margin: 32px auto;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 32px;
+        }
+
+        @media (max-width: 900px) {
+            .container { grid-template-columns: 1fr; }
+        }
+
+        /* Card Elements */
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow-subtle);
+            border: 1px solid var(--border-color);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--text-heading);
+            margin-bottom: 24px;
+        }
+
+        /* Segmented Tabs (Groww Style) */
+        .tabs {
+            display: flex;
+            gap: 24px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 24px;
+        }
+
+        .tab {
+            padding: 12px 0;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            position: relative;
+            transition: color 0.2s;
+        }
+
+        .tab.active {
+            color: var(--primary-teal);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary-teal);
+        }
+
+        /* Radio Pill Selection for Buy/Sell */
+        .pill-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .pill-btn {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--text-main);
+            transition: 0.2s;
+        }
+
+        .pill-btn.active.buy-pill {
+            background-color: #e6faf5;
+            border-color: var(--primary-teal);
+            color: var(--primary-teal);
+        }
+
+        .pill-btn.active.sell-pill {
+            background-color: #fcece9;
+            border-color: var(--color-down);
+            color: var(--color-down);
+        }
+
+        /* Form Inputs */
+        .input-group {
+            margin-bottom: 24px;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .custom-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            color: var(--text-heading);
+            outline: none;
+            transition: border-color 0.2s;
+            appearance: none;
+            background-color: #ffffff;
+        }
+
+        .custom-input:focus {
+            border-color: var(--primary-teal);
+        }
+
+        .hidden { display: none !important; }
+
+        /* Execute Request Button */
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background-color: var(--primary-teal);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 8px;
+        }
+
+        .btn-primary:hover { background-color: var(--primary-teal-hover); }
+        .btn-primary.sell-mode { background-color: var(--color-down); }
+        .btn-primary.sell-mode:hover { background-color: #d1462a; }
+
+        /* Data Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            text-align: left;
+            padding: 16px 12px;
+            color: var(--text-muted);
+            font-weight: 400;
+            font-size: 13px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table td {
+            padding: 16px 12px;
+            color: var(--text-heading);
+            font-weight: 500;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* Abstract Chart replacing the actual stock chart */
+        .chart-mockup {
+            height: 180px;
+            display: flex;
+            align-items: flex-end;
+            gap: 6px;
+            margin-top: 24px;
+        }
+        
+        .chart-bar {
+            flex: 1;
+            border-radius: 4px 4px 0 0;
+            position: relative;
+        }
+        .chart-bar.up { background-color: var(--color-up); }
+        .chart-bar.down { background-color: var(--color-down); }
+
+        /* Assistant Chat Widget */
+        .chat-widget {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 360px;
+            height: 540px;
+            background: var(--chat-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow-float);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 100;
+        }
+
+        .chat-header {
+            padding: 20px;
+            background-color: var(--primary-teal);
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .chat-av {
+            width: 36px; height: 36px;
+            background: white;
+            color: var(--primary-teal);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .chat-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background-color: #ffffff;
+        }
+
+        .msg-bubble {
+            padding: 12px 16px;
+            border-radius: 12px;
+            max-width: 85%;
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--text-heading);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .msg-ai {
+            align-self: flex-start;
+            background-color: var(--chat-ai);
+            border-bottom-left-radius: 4px;
+        }
+
+        .msg-user {
+            align-self: flex-end;
+            background-color: var(--chat-user);
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-footer {
+            padding: 16px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 12px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            outline: none;
+            font-family: inherit;
+        }
+        
+        .chat-input:focus { border-color: var(--primary-teal); }
+
+        .btn-send {
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            background-color: var(--primary-teal);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .loader-dots { display: none; align-items: center; gap: 4px; padding: 12px; align-self: flex-start; background: var(--chat-ai); border-radius: 12px; border-bottom-left-radius: 4px; }
+        .loader-dots.active { display: flex; }
+        .dot { width: 6px; height: 6px; background: var(--primary-teal); border-radius: 50%; animation: blink 1.4s infinite both; }
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes blink { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    </style>
+</head>
+<body>
+
+    <!-- Groww Style Navigation -->
+    <div class="navbar">
+        <div class="logo-area">
+            <div class="logo-icon">P</div> PrimeTrade
+        </div>
+        <div class="search-bar">
+            <span>🔍</span> What are you looking for today?
+        </div>
+        <div style="display:flex; align-items:center; gap:24px;">
+            <span style="font-weight: 500; color: var(--text-main);">Wallet</span>
+            <div style="width: 36px; height: 36px; border-radius: 50%; background: #eceff1; display:flex; align-items:center; justify-content:center; font-weight:bold; color:var(--text-heading);">A</div>
+        </div>
+    </div>
+
+    <!-- Ticker -->
+    <div class="marquee-wrapper">
+        <div class="marquee-content">
+            <div class="ticker-item">BTC/USDT <span class="val-up">▲ 2,450 (2.4%)</span></div>
+            <div class="ticker-item">ETH/USDT <span class="val-down">▼ 40.2 (1.1%)</span></div>
+            <div class="ticker-item">SOL/USDT <span class="val-up">▲ 14.5 (8.2%)</span></div>
+            <div class="ticker-item">BNB/USDT <span class="val-up">▲ 2.5 (0.5%)</span></div>
+            <div class="ticker-item">XRP/USDT <span class="val-down">▼ 0.02 (3.1%)</span></div>
+            
+            <div class="ticker-item">BTC/USDT <span class="val-up">▲ 2,450 (2.4%)</span></div>
+            <div class="ticker-item">ETH/USDT <span class="val-down">▼ 40.2 (1.1%)</span></div>
+            <div class="ticker-item">SOL/USDT <span class="val-up">▲ 14.5 (8.2%)</span></div>
+            <div class="ticker-item">BNB/USDT <span class="val-up">▲ 2.5 (0.5%)</span></div>
+            <div class="ticker-item">XRP/USDT <span class="val-down">▼ 0.02 (3.1%)</span></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Order Form Card -->
+        <div class="card" style="align-self: start;">
+            <div class="tabs">
+                <div class="tab active" data-type="MARKET">Market</div>
+                <div class="tab" data-type="LIMIT">Limit</div>
+                <div class="tab" data-type="STOP_LIMIT">Stop Limit</div>
+            </div>
+
+            <div class="pill-group">
+                <div class="pill-btn active buy-pill">Buy</div>
+                <div class="pill-btn sell-pill">Sell</div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Asset</label>
+                <select class="custom-input" id="symbolInput">
+                    <option>BTCUSDT</option>
+                    <option>ETHUSDT</option>
+                    <option>SOLUSDT</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Qty</label>
+                <input type="number" class="custom-input" value="0.05" id="qtyInput">
+            </div>
+
+            <div class="input-group hidden" id="priceWrap">
+                <label class="input-label">Limit Price ($)</label>
+                <input type="number" class="custom-input" value="94000.00" id="priceInput">
+            </div>
+
+            <div style="display:flex; justify-content:space-between; margin-bottom: 24px; color: var(--text-muted); font-size:13px;">
+                <span>Available Balance</span>
+                <span style="font-weight: 500; color: var(--text-heading);">$10,000.00</span>
+            </div>
+
+            <button class="btn-primary" id="executeBtn">Buy BTCUSDT</button>
+        </div>
+
+        <!-- Ledger & Chart Column -->
+        <div style="display:flex; flex-direction:column; gap:32px;">
+            <div class="card">
+                <div class="card-title">Market Sentiment</div>
+                <div style="display:flex; gap:16px; font-size:13px; color:var(--text-muted);">
+                    <div style="display:flex; align-items:center; gap:6px;"><div style="width:10px; height:10px; background:var(--color-up); border-radius:2px;"></div> Buyers (62%)</div>
+                    <div style="display:flex; align-items:center; gap:6px;"><div style="width:10px; height:10px; background:var(--color-down); border-radius:2px;"></div> Sellers (38%)</div>
+                </div>
+                <div class="chart-mockup">
+                    <div class="chart-bar down" style="height:40%"></div>
+                    <div class="chart-bar up" style="height:60%"></div>
+                    <div class="chart-bar up" style="height:90%"></div>
+                    <div class="chart-bar down" style="height:55%"></div>
+                    <div class="chart-bar up" style="height:80%"></div>
+                    <div class="chart-bar down" style="height:35%"></div>
+                    <div class="chart-bar up" style="height:100%"></div>
+                    <div class="chart-bar up" style="height:120%"></div>
+                    <div class="chart-bar up" style="height:160%"></div>
+                    <div class="chart-bar down" style="height:140%"></div>
+                    <div class="chart-bar up" style="height:170%"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Order Ledger</div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>SYMBOL</th>
+                            <th>TYPE</th>
+                            <th>SIDE</th>
+                            <th>QTY</th>
+                            <th>STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ledgerBody">
+                        <tr>
+                            <td>BTCUSDT</td>
+                            <td>MARKET</td>
+                            <td class="val-up">BUY</td>
+                            <td>0.5</td>
+                            <td>FILLED</td>
+                        </tr>
+                        <tr>
+                            <td>ETHUSDT</td>
+                            <td>LIMIT</td>
+                            <td class="val-down">SELL</td>
+                            <td>2.0</td>
+                            <td style="color:var(--text-muted)">NEW</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chatbot (Groww Support Style) -->
+    <div class="chat-widget">
+        <div class="chat-header">
+            <div class="chat-av">🤖</div>
+            <div>
+                <div>AI Assistant</div>
+                <div style="font-size: 13px; font-weight: 400; opacity: 0.9;">Usually replies instantly</div>
+            </div>
+        </div>
+        
+        <div class="chat-body" id="chatBody">
+            <div class="msg-bubble msg-ai">
+                Hi! Welcome to PrimeTrade. I'm your AI advisor. You can ask for market insights or instruct me to automatically complete the order ticket for you.
+            </div>
+            
+            <div class="loader-dots" id="typingIndicator">
+                <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+            </div>
+        </div>
+
+        <div class="chat-footer">
+            <input type="text" class="chat-input" id="chatInput" placeholder="ex: Buy 0.1 BTC at market">
+            <button class="btn-send" id="sendBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Form Controls
+        const tabs = document.querySelectorAll('.tab');
+        const priceWrap = document.getElementById('priceWrap');
+        const buyBtn = document.querySelector('.buy-pill');
+        const sellBtn = document.querySelector('.sell-pill');
+        const executeBtn = document.getElementById('executeBtn');
+        const symbolInput = document.getElementById('symbolInput');
+        const qtyInput = document.getElementById('qtyInput');
+        const ledgerBody = document.getElementById('ledgerBody');
+
+        let isBuy = true;
+        let cType = "MARKET";
+
+        tabs.forEach(t => {
+            t.addEventListener('click', () => {
+                tabs.forEach(x => x.classList.remove('active'));
+                t.classList.add('active');
+                cType = t.dataset.type;
+                cType === 'MARKET' ? priceWrap.classList.add('hidden') : priceWrap.classList.remove('hidden');
+            });
+        });
+
+        buyBtn.addEventListener('click', () => { isBuy=true; buyBtn.classList.add('active'); sellBtn.classList.remove('active'); updateBtn(); });
+        sellBtn.addEventListener('click', () => { isBuy=false; sellBtn.classList.add('active'); buyBtn.classList.remove('active'); updateBtn(); });
+        symbolInput.addEventListener('change', updateBtn);
+
+        function updateBtn() {
+            const act = isBuy ? 'Buy' : 'Sell';
+            executeBtn.textContent = `${act} ${symbolInput.value}`;
+            executeBtn.className = `btn-primary ${isBuy ? '' : 'sell-mode'}`;
+        }
+
+        // Logic for execution
+        function addLedgerEntry(sym, type, side, qty) {
+            const sideClass = side === 'BUY' ? 'val-up' : 'val-down';
+            const status = type === 'MARKET' ? 'FILLED' : 'NEW';
+            const statusColor = type === 'MARKET' ? '' : 'color:var(--text-muted)';
+            
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${sym}</td>
+                            <td>${type}</td>
+                            <td class="${sideClass}">${side}</td>
+                            <td>${qty}</td>
+                            <td style="${statusColor}">${status}</td>`;
+            ledgerBody.insertBefore(tr, ledgerBody.firstChild);
+        }
+
+        executeBtn.addEventListener('click', () => {
+            const orig = executeBtn.textContent;
+            executeBtn.textContent = 'Processing ...';
+            executeBtn.style.opacity = 0.8;
+
+            setTimeout(() => {
+                addLedgerEntry(symbolInput.value, cType, isBuy?'BUY':'SELL', qtyInput.value);
+                executeBtn.textContent = 'Order Successful!';
+                
+                setTimeout(() => {
+                    executeBtn.textContent = orig;
+                    executeBtn.style.opacity = 1;
+                }, 1500);
+            }, 800);
+        });
+
+        // Chat Integration
+        const chatInput = document.getElementById('chatInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const chatBody = document.getElementById('chatBody');
+        const typingIndicator = document.getElementById('typingIndicator');
+
+        function appendMsg(txt, sender) {
+            const div = document.createElement('div');
+            div.className = `msg-bubble msg-${sender}`;
+            div.innerHTML = txt;
+            chatBody.insertBefore(div, typingIndicator);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        function triggerAI() {
+            const val = chatInput.value.trim();
+            if(!val) return;
+            
+            appendMsg(val, 'user');
+            chatInput.value = '';
+            
+            typingIndicator.classList.add('active');
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            setTimeout(() => {
+                typingIndicator.classList.remove('active');
+                const lower = val.toLowerCase();
+                
+                if(lower.includes('buy') || lower.includes('sell')) {
+                    const action = lower.includes('sell') ? 'SELL' : 'BUY';
+                    const asset = lower.includes('eth') ? 'ETHUSDT' : lower.includes('sol') ? 'SOLUSDT' : 'BTCUSDT';
+                    appendMsg(`Processed your request. A simulated order for <b>${action} ${asset}</b> has been dispatched and confirmed in the ledger.`, 'ai');
+                    addLedgerEntry(asset, 'MARKET', action, 1);
+                } else {
+                    appendMsg(`Market indices show moderate bullish momentum overall. Specify an order like 'Buy BTC' and I'll execute the simulated loop directly!`, 'ai');
+                }
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }, 1000);
+        }
+
+        sendBtn.addEventListener('click', triggerAI);
+        chatInput.addEventListener('keydown', e => { if(e.key === 'Enter') triggerAI(); });
+
+    </script>
+</body>
+</html>

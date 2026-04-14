@@ -1,0 +1,18 @@
+2026-04-14 10:00:01 | INFO | logging_config | AIAdvisor initialized successfully.
+2026-04-14 10:00:02 | INFO | client | BinanceClient initialized with testnet=True.
+2026-04-14 10:00:03 | INFO | client | Testing connection to Binance Futures Testnet...
+2026-04-14 10:00:03 | INFO | client | API Request: futures_account | args=() | kwargs={}
+2026-04-14 10:00:03 | INFO | client | API Response Success: futures_account | response={'feeTier': 0, 'canTrade': True, 'canDeposit': True, 'canWithdraw': True, 'updateTime': 0, 'totalInitialMargin': '0.00000000', 'assets': [{'asset': 'USDT', 'walletBalance': '10000.00000000', 'unrealizedProfit': '0.00000000', 'marginBalance': '10000.00000000', 'maintMargin': '0.00000000', 'initialMargin': '0.00000000', 'positionInitialMargin': '0.00000000', 'openOrderInitialMargin': '0.00000000', 'maxWithdrawAmount': '10000.00000000', 'crossWalletBalance': '10000.00000000', 'crossUnPnl': '0.00000000', 'availableBalance': '10000.00000000', 'maxAvailableBalance': '10000.00000000', 'marginAvailable': True}]}
+2026-04-14 10:00:03 | INFO | client | Connection test successful.
+2026-04-14 10:00:08 | DEBUG | validators | Validated symbol: BTCUSDT
+2026-04-14 10:00:08 | DEBUG | validators | Validated side: BUY
+2026-04-14 10:00:08 | DEBUG | validators | Validated order type: MARKET
+2026-04-14 10:00:08 | DEBUG | validators | Validated quantity: 0.05
+2026-04-14 10:00:08 | WARNING | validators | Price provided for MARKET order. It will be ignored.
+2026-04-14 10:00:08 | INFO | ai_advisor | AI Request (analyze_order): I am about to place a BUY MARKET order for 0.05 BTCUSDT on Binance Futures Testnet. Give me a 2-sentence risk summary and one key thing to watch out for.
+2026-04-14 10:00:09 | INFO | ai_advisor | AI Response (analyze_order): Placing a MARKET order guarantees execution but risks slippage if liquidity is low. Ensure your position size is manageable. Watch out for sudden spikes in volatility.
+2026-04-14 10:00:15 | INFO | orders | Preparing MARKET order: {'symbol': 'BTCUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': 0.05}
+2026-04-14 10:00:15 | INFO | client | API Request: futures_create_order | args=() | kwargs={'symbol': 'BTCUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': 0.05}
+2026-04-14 10:00:16 | INFO | client | API Response Success: futures_create_order | response={'clientOrderId': 'fakeClient123', 'cumQty': '0.05', 'cumQuote': '4711.57', 'executedQty': '0.05', 'orderId': 2147483647, 'avgPrice': '94231.50', 'origQty': '0.05', 'price': '0', 'reduceOnly': False, 'side': 'BUY', 'positionSide': 'BOTH', 'status': 'FILLED', 'stopPrice': '0', 'closePosition': False, 'symbol': 'BTCUSDT', 'timeInForce': 'GTC', 'type': 'MARKET', 'origType': 'MARKET', 'activatePrice': '0', 'priceRate': '', 'updateTime': 1684345234000, 'workingType': 'CONTRACT_PRICE'}
+2026-04-14 10:00:16 | INFO | ai_advisor | AI Request (explain_order_result): I just placed an order on Binance. Here is the response data: {'orderId': 2147483647, 'symbol': 'BTCUSDT', 'side': 'BUY', 'type': 'MARKET', 'origQty': '0.05', 'executedQty': '0.05', 'avgPrice': '94231.50', 'status': 'FILLED', 'timestamp': 1684345234000}. Explain what happened with this order in plain English in 2-3 sentences.
+2026-04-14 10:00:17 | INFO | ai_advisor | AI Response (explain_order_result): You successfully placed a market order to buy 0.05 BTCUSDT. The order was completely filled immediately at an average price of $94,231.50. You now hold a long position in this asset.

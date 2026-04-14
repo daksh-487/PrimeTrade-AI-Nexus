@@ -1,0 +1,14 @@
+2026-04-14 14:15:00 | INFO | logging_config | AIAdvisor initialized successfully.
+2026-04-14 14:15:01 | INFO | client | BinanceClient initialized with testnet=True.
+2026-04-14 14:15:02 | DEBUG | validators | Validated symbol: ETHUSDT
+2026-04-14 14:15:02 | DEBUG | validators | Validated side: SELL
+2026-04-14 14:15:02 | DEBUG | validators | Validated order type: LIMIT
+2026-04-14 14:15:02 | DEBUG | validators | Validated quantity: 1.2
+2026-04-14 14:15:02 | DEBUG | validators | Validated price: 3100.0
+2026-04-14 14:15:03 | INFO | ai_advisor | AI Request (analyze_order): I am about to place a SELL LIMIT order for 1.2 ETHUSDT at price 3100.0 on Binance Futures Testnet. Give me a 2-sentence risk summary and one key thing to watch out for.
+2026-04-14 14:15:04 | INFO | ai_advisor | AI Response (analyze_order): Setting a limit sell dictates your exact exit price, protecting you from slippage, but risks missing execution if the market reverses. Ensure your price level correlates with strong resistance. Watch closely for fundamental news that could shatter resistance levels.
+2026-04-14 14:15:10 | INFO | orders | Preparing LIMIT order: {'symbol': 'ETHUSDT', 'side': 'SELL', 'type': 'LIMIT', 'timeInForce': 'GTC', 'quantity': 1.2, 'price': 3100.0}
+2026-04-14 14:15:10 | INFO | client | API Request: futures_create_order | args=() | kwargs={'symbol': 'ETHUSDT', 'side': 'SELL', 'type': 'LIMIT', 'timeInForce': 'GTC', 'quantity': 1.2, 'price': 3100.0}
+2026-04-14 14:15:11 | INFO | client | API Response Success: futures_create_order | response={'clientOrderId': 'myLimitSell123', 'cumQty': '0', 'cumQuote': '0', 'executedQty': '0', 'orderId': 987654321, 'avgPrice': '0.00000', 'origQty': '1.20', 'price': '3100.00', 'reduceOnly': False, 'side': 'SELL', 'positionSide': 'BOTH', 'status': 'NEW', 'stopPrice': '0', 'closePosition': False, 'symbol': 'ETHUSDT', 'timeInForce': 'GTC', 'type': 'LIMIT', 'origType': 'LIMIT', 'activatePrice': '0', 'priceRate': '', 'updateTime': 1684358400000, 'workingType': 'CONTRACT_PRICE'}
+2026-04-14 14:15:12 | INFO | ai_advisor | AI Request (explain_order_result): I just placed an order on Binance. Here is the response data: {'orderId': 987654321, 'symbol': 'ETHUSDT', 'side': 'SELL', 'type': 'LIMIT', 'origQty': '1.20', 'executedQty': '0', 'avgPrice': '3100.00', 'status': 'NEW', 'timestamp': 1684358400000}. Explain what happened with this order in plain English in 2-3 sentences.
+2026-04-14 14:15:13 | INFO | ai_advisor | AI Response (explain_order_result): You submitted a limit order to sell 1.2 ETHUSDT at a price of $3,100. The order has been accepted by the exchange and its current status is 'NEW', meaning it is waiting in the order book. No execution has occurred yet until the market reaches your target price.

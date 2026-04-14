@@ -1,0 +1,20 @@
+# Environment Variables
+.env
+
+# Virtual Environment
+venv/
+.venv/
+env/
+ENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Logs
+logs/trading_bot.log
+
+# OS files
+.DS_Store
+Thumbs.db
